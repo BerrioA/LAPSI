@@ -1,33 +1,36 @@
 import app from "./src/app.js";
-// import { sequelize } from "./database/db.js";
+import { sequelize } from "./src/config/db.js";
+import { setupRelations } from "./src/models/relations.js";
+import { seedAll } from "./src/seeders/seedAll.js";
+import { setupScheduledTasks } from "./src/utils/scheduler.js";
 
 async function main() {
   try {
-    //  await sequelize.authenticate();
-    //  console.log(
-    //    "✅ La conexión con la base de datos se ha realizado con éxito."
-    //  );
+    // await sequelize.authenticate();
+    // console.log(
+    //   "✅ La conexión con la base de datos se ha realizado con éxito."
+    // );
 
-    // Sincronizar base de datos (eliminar y recrear todas las tablas)
-    //  await sequelize.sync({ force: true });
+    // await sequelize.sync({ force: true });
+    // setupRelations();
+    // await seedAll();
 
-    //Este comando permite realizar cambios en la base de datos sin perder algunos campos de registro dentro de esta misma
+    // Iniciar la verificación automática al arrancar el servidor
+    setupScheduledTasks();
+
     // await sequelize.sync({ alter: true });
 
     const PORT = process.env.PORT || 3000;
-
     app.listen(PORT, () => {
-      console.log("✅ Servidor LAPSI corriendo en el puerto:", PORT);
       console.log(
-        `Documentación LAPSI proximamente disponible en: http://localhost:${PORT}/api/lapsi/v1/documentation`
+        `✅ Servidor LAPSI corriendo en el puerto: ${PORT} \nDocumentación LAPSI proximamente disponible en: http://localhost:${PORT}/api/lapsi/v1/documentation`
       );
     });
   } catch (error) {
     console.log(
-      "❌ Error al intentar establecer la conexión con la base de datos LAPSI."
+      "❌ Error al intentar establecer la conexión con la base de datos LAPSI.",
+      error
     );
-
-    console.log(error);
   }
 }
 main();

@@ -3,8 +3,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import swaggerUI from "swagger-ui-express";
-
-// import spec from "./swagger/swagger.js";
+import spec from "./swagger/swaggerConfig.js";
+import RoomsRoutes from "./routes/rooms.routes.js";
+import RegisterBookingRoutes from "./routes/bookings.routes.js";
+import user from './routes/user.js'
 
 const app = express();
 
@@ -24,6 +26,9 @@ app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
 // Rutas
-// app.use("/api/lapsi/v1/documentation", swaggerUI.serve, swaggerUI.setup(spec));
+app.use("/api/lapsi/v1/documentation", swaggerUI.serve, swaggerUI.setup(spec));
+app.use("/api/lapsi/v1/rooms", RoomsRoutes);
+app.use("/api/lapsi/v1/bookings", RegisterBookingRoutes);
+app.use("/api/lapsi/v1/user", user);
 
 export default app;
