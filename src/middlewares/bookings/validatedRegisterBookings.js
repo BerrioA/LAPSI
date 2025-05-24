@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { validationResultExpress } from "../../express-validator.js";
+import { validationResultExpress } from "../express-validator.js";
 
 const allowedActivities = [
   "Estudio de prueba",

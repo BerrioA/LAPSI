@@ -1,5 +1,5 @@
 import { param } from "express-validator";
-import { validationResultExpress } from "../../express-validator.js";
+import { validationResultExpress } from "../express-validator.js";
 
 // Validación del Identificador de la reserva
 export const validationIdBooking = [
