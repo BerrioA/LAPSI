@@ -5,7 +5,12 @@ import {
   registerBooking,
   updateBooking,
 } from "../controllers/bookings/bookings.controller.js";
-import { verifyUserWeeklyLimit } from "../middlewares/bookings/verifyUserWeeklyLimit.js";
+import {
+  validatedRegisterBooking,
+  validatedUpdateBooking,
+  validationIdBooking,
+  verifyUserWeeklyLimit,
+} from "../middlewares/bookings/index.js";
 
 const router = Router();
 
@@ -184,7 +189,12 @@ router.get("/", getBookings);
  *       500:
  *         description: Error interno del servidor
  */
-router.post("/", verifyUserWeeklyLimit, registerBooking);
+router.post(
+  "/",
+  verifyUserWeeklyLimit,
+  validatedRegisterBooking,
+  registerBooking
+);
 /**
  * @swagger
  * /bookings/{bookingId}:
@@ -270,7 +280,13 @@ router.post("/", verifyUserWeeklyLimit, registerBooking);
  *       500:
  *         description: Error interno del servidor
  */
-router.patch("/:bookingId", verifyUserWeeklyLimit, updateBooking);
+router.patch(
+  "/:bookingId",
+  validationIdBooking,
+  verifyUserWeeklyLimit,
+  validatedUpdateBooking,
+  updateBooking
+);
 /**
  * @swagger
  * /bookings/{bookingId}:
@@ -329,6 +345,6 @@ router.patch("/:bookingId", verifyUserWeeklyLimit, updateBooking);
  *                   type: string
  *                   example: Error al intentar eliminar reserva.
  */
-router.delete("/:bookingId", deleteBooking);
+router.delete("/:bookingId", validationIdBooking, deleteBooking);
 
 export default router;
