@@ -1,6 +1,6 @@
 import app from "./src/app.js";
+import "./src/models/relations.js";
 import { sequelize } from "./src/config/db.js";
-import { setupRelations } from "./src/models/relations.js";
 import { seedAll } from "./src/seeders/seedAll.js";
 import { setupScheduledTasks } from "./src/utils/scheduler.js";
 
@@ -12,7 +12,6 @@ async function main() {
     // );
 
     // await sequelize.sync({ force: true });
-    // setupRelations();
     // await seedAll();
 
     // Iniciar la verificación automática al arrancar el servidor

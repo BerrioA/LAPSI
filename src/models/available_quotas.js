@@ -52,10 +52,10 @@ export const AvailableQuotas = sequelize.define("available_quotas", {
   },
 });
 
-// Un bloque de tiempo tiene muchos cupos disponibles por fecha
-BookingTimeBlocks.hasMany(AvailableQuotas, {
-  foreignKey: "bookingTimeBlockId",
-});
-AvailableQuotas.belongsTo(BookingTimeBlocks, {
-  foreignKey: "bookingTimeBlockId",
-});
+// // Un bloque de tiempo tiene muchos cupos disponibles por fecha
+// BookingTimeBlocks.hasMany(AvailableQuotas, {
+//   foreignKey: "bookingTimeBlockId",
+// });
+// AvailableQuotas.belongsTo(BookingTimeBlocks, {
+//   foreignKey: "bookingTimeBlockId",
+// });

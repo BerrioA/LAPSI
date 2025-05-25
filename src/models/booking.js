@@ -140,7 +140,6 @@ export const Booking = sequelize.define("bookings", {
   },
 });
 
-
-  // Un bloque de tiempo tiene muchas reservas
-  BookingTimeBlocks.hasMany(Booking, { foreignKey: "bookingTimeBlockId" });
-  Booking.belongsTo(BookingTimeBlocks, { foreignKey: "bookingTimeBlockId" });
+// // Un bloque de tiempo tiene muchas reservas
+// BookingTimeBlocks.hasMany(Booking, { foreignKey: "bookingTimeBlockId" });
+// Booking.belongsTo(BookingTimeBlocks, { foreignKey: "bookingTimeBlockId" });

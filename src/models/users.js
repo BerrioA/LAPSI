@@ -13,22 +13,22 @@ export const User = sequelize.define("users", {
   },
   // Nombre del usuario
   name: {
-    type: DataTypes.STRING(40),
+    type: DataTypes.STRING(30),
     allowNull: false,
   },
   // Segundo nombre del usuario
   middle_name: {
-    type: DataTypes.STRING(40),
+    type: DataTypes.STRING(30),
     allowNull: true,
   },
   // Apellido del usuario
   last_name: {
-    type: DataTypes.STRING(40),
+    type: DataTypes.STRING(30),
     allowNull: false,
   },
   // Segundo apellido del usuario
   second_last_name: {
-    type: DataTypes.STRING(40),
+    type: DataTypes.STRING(30),
     allowNull: false,
   },
   // Tipo de documento
@@ -69,7 +69,7 @@ export const User = sequelize.define("users", {
     allowNull: false,
   },
   // Identificador del del rol
-  rolId: {
+  roleId: {
     type: DataTypes.UUID,
     allowNull: true,
     references: {
@@ -88,7 +88,7 @@ export const User = sequelize.define("users", {
 
 // Hook para asignar automáticamente el rol de Estudiante a nuevos usuarios
 User.beforeCreate(async (user) => {
-  if (!user.rolId) {
+  if (!user.roleId) {
     try {
       // Buscar el rol de Estudiante
       const estudianteRol = await Rol.findOne({
@@ -96,7 +96,7 @@ User.beforeCreate(async (user) => {
       });
 
       if (estudianteRol) {
-        user.rolId = estudianteRol.id;
+        user.roleId = estudianteRol.id;
       } else {
         console.error("No se encontró el rol de Estudiante");
       }

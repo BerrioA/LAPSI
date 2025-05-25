@@ -19,7 +19,7 @@ export const Rol = sequelize.define("roles", {
 
 // Hook para insertar roles después de sincronizar la tabla
 Rol.afterSync(async () => {
-  const roles = ["Admin", "Estudiante"];
+  const roles = ["Admin", "Moderador", "Estudiante"];
   await Rol.bulkCreate(
     roles.map((rol) => ({ role: rol })),
     { ignoreDuplicates: true }
