@@ -73,7 +73,8 @@ export const getAllTimeBlocksByRoom = async (req, res) => {
 export const getWeeklyQuotasStatus = async (req, res) => {
   try {
     const { roomId } = req.params;
-    const { date } = req.body;
+    const { date } = req.query;
+    console.log(req.query);
     const baseDate = date ? moment(date) : moment();
 
     const weekStart = baseDate.clone().startOf("isoWeek").format("YYYY-MM-DD");

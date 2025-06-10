@@ -37,6 +37,7 @@ export const registerBooking = async (req, res) => {
       { transaction }
     );
 
+
     await AvailableQuotas.create(
       {
         date: bookingDate,

@@ -9,7 +9,8 @@ import { Room } from "../../models/rooms.js";
 //Middleware encargado de validar si un usuario tiene reservas pendientes y tiene horas disponibles
 export const verifyUserWeeklyLimit = async (req, res, next) => {
   try {
-    const { userId, bookingTimeBlockId, roomId, bookingDate } = req.body;
+    const userId = req.uid;
+    const { bookingTimeBlockId, roomId, bookingDate } = req.body;
     const { startDate, endDate } = getDates(bookingDate);
     let totalHorasReservadas = 0;
     let totalQuotesOccupied = 0;

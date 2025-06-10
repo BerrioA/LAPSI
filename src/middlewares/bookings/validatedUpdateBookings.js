@@ -58,7 +58,7 @@ export const validatedUpdateBooking = [
     .trim()
     .optional()
     .isString()
-    .matches(/^[a-zA-ZÁÉÍÓÚáéíóúÜüÑñ0-9\s]{3,}$/)
+    .matches(/^[\p{L}\p{M}\d\s:–(),.-]{10,}$/u)
     .withMessage(
       "Los símbolos están de vacaciones. Usa solo letras, números y espacios en el área de prueba."
     )

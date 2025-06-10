@@ -4,7 +4,7 @@ import { BookingTimeBlocks } from "../models/booking_time_blocks.js";
 import { sequelize } from "../config/db.js";
 
 // Función para ejecutar como una tarea programada y actualizar las reservas pendientes
-export const updateReservationsFinished = async () => {
+export const updateReservationsFinished = async (res) => {
   let bookingDuration;
   const reservationsUpdated = [];
   const transaction = await sequelize.transaction();
@@ -108,13 +108,16 @@ export const updateReservationsFinished = async () => {
     await transaction.commit();
 
     console.log(
-      `Se actualizaron ${
-        reservationsUpdated.length
-      } reservas: ${reservationsUpdated.join(", ")}`
+      `Se actualizaron ${reservationsUpdated.length} reservas a finalizadas.`
     );
   } catch (error) {
     await transaction.rollback();
 
     console.error("Error al procesar las reservas:", error);
+
+    return res.status(500).json({
+      error:
+        "Se ha presentado un error al procesar las actualizaciones de reservas automaticas.",
+    });
   }
 };

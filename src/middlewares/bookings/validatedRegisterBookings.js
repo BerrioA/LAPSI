@@ -63,7 +63,7 @@ export const validatedRegisterBooking = [
     .notEmpty()
     .withMessage("El área de prueba es clave para avanzar. ¡Solo falta eso!")
     .isString()
-    .matches(/^[a-zA-ZÁÉÍÓÚáéíóúÜüÑñ0-9\s]{3,}$/)
+    .matches(/^[\p{L}\p{M}\d\s:–(),.-]{10,}$/u)
     .withMessage(
       "Los símbolos están de vacaciones. Usa solo letras, números y espacios en el área de prueba."
     )
@@ -144,10 +144,7 @@ export const validatedRegisterBooking = [
     .escape(),
 
   body("duration")
-    .notEmpty()
-    .withMessage(
-      "La duración de reserva es clave para avanzar. ¡Solo falta eso!"
-    )
+    .optional()
     .isFloat()
     .withMessage("La duración debe ser un número decimal válido.")
     .custom((value) => {

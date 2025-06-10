@@ -11,6 +11,11 @@ import {
   updateBooking,
   deleteBooking,
 } from "../controllers/bookings/index.js";
+import {
+  requireToken,
+  verifyAdminMod,
+  verifyStudent,
+} from "../middlewares/auth/index.js";
 
 const router = Router();
 
@@ -105,7 +110,7 @@ const router = Router();
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", getBookings);
+router.get("/", requireToken, verifyAdminMod, getBookings);
 /**
  * @swagger
  * /bookings:
@@ -191,6 +196,8 @@ router.get("/", getBookings);
  */
 router.post(
   "/",
+  requireToken,
+  verifyStudent,
   verifyUserWeeklyLimit,
   validatedRegisterBooking,
   registerBooking
@@ -282,6 +289,8 @@ router.post(
  */
 router.patch(
   "/:bookingId",
+  requireToken,
+  verifyStudent,
   validationIdBooking,
   verifyUserWeeklyLimit,
   validatedUpdateBooking,
@@ -345,6 +354,12 @@ router.patch(
  *                   type: string
  *                   example: Error al intentar eliminar reserva.
  */
-router.delete("/:bookingId", validationIdBooking, deleteBooking);
+router.delete(
+  "/:bookingId",
+  requireToken,
+  verifyStudent,
+  validationIdBooking,
+  deleteBooking
+);
 
 export default router;

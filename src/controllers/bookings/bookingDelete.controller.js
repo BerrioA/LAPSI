@@ -1,9 +1,9 @@
 import { Booking } from "../../models/booking.js";
 
-// Controlador encargado de eliminar una reserva
+// Controlador encargado de eliminar una reserva del usuario
 export const deleteBooking = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.uid;
     const { bookingId } = req.params;
 
     const booking = await Booking.findByPk(bookingId);

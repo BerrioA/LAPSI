@@ -6,7 +6,6 @@ export const updateBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;
     const {
-      userId,
       activity_type,
       other_activity,
       study_area,
@@ -31,8 +30,6 @@ export const updateBooking = async (req, res) => {
         { transaction }
       );
     }
-
-    if (userId && userId !== booking.userId) booking.userId = userId;
 
     if (activity_type && activity_type !== booking.activity_type)
       booking.activity_type = activity_type;

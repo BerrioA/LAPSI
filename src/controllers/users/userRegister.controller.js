@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { Op } from "sequelize";
 import jwt from "jsonwebtoken";
 import CryptoJS from "crypto-js";
 import { User } from "../../models/users.js";
@@ -22,12 +23,26 @@ export const registerUsers = async (req, res) => {
       password,
     } = req.body;
 
-    const user = await User.findOne({ where: { email } });
-    if (user)
-      return res.status(400).json({
-        error:
-          "Parece que ya nos conocemos... Este correo ya se encuentra registrado.",
-      });
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ email }, { document_number }],
+      },
+    });
+
+    if (user) {
+      if (user.email === email) {
+        return res.status(400).json({
+          error:
+            "Parece que ya nos conocemos... Este correo ya se encuentra registrado.",
+        });
+      }
+
+      if (user.document_number === document_number) {
+        return res.status(400).json({
+          error: "Ups, este número de documento ya está registrado. ¿Eres tú?",
+        });
+      }
+    }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -100,6 +115,7 @@ export const registerUsers = async (req, res) => {
       message: "¡Bienvenido! Tu cuenta ha sido creada exitosamente.",
     });
   } catch (error) {
+    await t.rollback();
     console.error(
       `¡Vaya! Parece que el registro decidió tomarse un descanso. ¿Podrías intentarlo más tarde?. ${error}`
     );
