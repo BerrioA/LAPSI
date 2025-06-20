@@ -111,7 +111,7 @@ export const registerUsers = async (req, res) => {
 
     await t.commit();
 
-    return res.status(200).json({
+    return res.status(201).json({
       message: "¡Bienvenido! Tu cuenta ha sido creada exitosamente.",
     });
   } catch (error) {

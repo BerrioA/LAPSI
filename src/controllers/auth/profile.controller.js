@@ -1,9 +1,15 @@
 import { User } from "../../models/users.js";
+import { Rol } from "../../models/roles.js"; // Asegúrate de importar el modelo
 
-// Controlador encargado de mostraer la información de perfil de usuario
 export const profile = async (req, res) => {
   try {
-    const user = await User.findByPk(req.uid);
+    const user = await User.findByPk(req.uid, {
+      include: {
+        model: Rol,
+        as: "role",
+        attributes: ["role"],
+      },
+    });
 
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado." });
@@ -13,7 +19,7 @@ export const profile = async (req, res) => {
       uid: user.id,
       name: user.name,
       last_name: user.last_name,
-      role: user.roleId,
+      role: user.role?.role,
       email: user.email,
       isVerified: user.isVerified,
     });

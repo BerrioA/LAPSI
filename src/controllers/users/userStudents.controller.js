@@ -23,6 +23,7 @@ export const getStudentUsers = async (req, res) => {
       cellphone: user.cellphone,
       email: user.email,
       role: user.role.role,
+      status: user.isVerified,
     }));
 
     return res.status(200).json(usuario);
