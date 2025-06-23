@@ -10,6 +10,7 @@ import {
   registerBooking,
   updateBooking,
   deleteBooking,
+  getBookingsByUser,
 } from "../controllers/bookings/index.js";
 import {
   requireToken,
@@ -111,6 +112,7 @@ const router = Router();
  *         description: Error interno del servidor
  */
 router.get("/", requireToken, verifyAdminMod, getBookings);
+
 /**
  * @swagger
  * /bookings:
@@ -361,5 +363,5 @@ router.delete(
   validationIdBooking,
   deleteBooking
 );
-
+router.get("/my-bookings", requireToken, verifyStudent, getBookingsByUser);
 export default router;

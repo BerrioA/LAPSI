@@ -11,6 +11,9 @@ import { AvailableQuotas } from "./available_quotas.js";
 Rol.hasMany(User, { foreignKey: "roleId" });
 User.belongsTo(Rol, { foreignKey: "roleId" });
 
+User.hasMany(Booking, { foreignKey: "userId" });
+Booking.belongsTo(User, { foreignKey: "userId" });
+
 // Una sala tiene muchos horarios
 Room.hasMany(Schedule, { foreignKey: "roomId" });
 Schedule.belongsTo(Room, { foreignKey: "roomId" });
@@ -38,5 +41,11 @@ AvailableQuotas.belongsTo(BookingTimeBlocks, {
 // Un bloque de tiempo tiene muchas reservas
 BookingTimeBlocks.hasMany(Booking, { foreignKey: "bookingTimeBlockId" });
 Booking.belongsTo(BookingTimeBlocks, { foreignKey: "bookingTimeBlockId" });
+
+// Una sala puede tener muchas reservas
+Room.hasMany(Booking, { foreignKey: "roomId" });
+// Una reserva pertenece a una sala
+Booking.belongsTo(Room, { foreignKey: "roomId" });
+
 
 console.log("✅ Relaciones entre modelos configuradas correctamente");
