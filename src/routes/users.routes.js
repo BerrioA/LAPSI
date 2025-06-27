@@ -14,12 +14,13 @@ import {
   validateUserRegister,
   validateUserUpdate,
 } from "../middlewares/users/index.js";
+import { requireToken } from "../middlewares/auth/requireToken.js";
 
 const router = Router();
 
 router.get("/", getStudentUsers);
 router.post("/", validateUserRegister, registerUsers);
-router.patch("/:userId", validateUserId, validateUserUpdate, updateUser);
+router.patch("/", requireToken, validateUserUpdate, updateUser);
 router.delete("/:userId", validateUserId, deleteUser);
 router.patch("/change-password", changePassword);
 router.post("/recover-password", sendPasswordRecoveryUrl);

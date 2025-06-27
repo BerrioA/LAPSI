@@ -3,7 +3,8 @@ import { User } from "../../models/users.js";
 // Controlador encargado de actualizar los datos de un usuario
 export const updateUser = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const uid = req.uid
+    console.log(uid);
     const {
       name,
       middle_name,
@@ -15,7 +16,9 @@ export const updateUser = async (req, res) => {
       email,
     } = req.body;
 
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(uid);
+
+    
 
     if (!user)
       return res.status(400).json({

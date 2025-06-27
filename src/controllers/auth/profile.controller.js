@@ -18,9 +18,14 @@ export const profile = async (req, res) => {
     return res.status(200).json({
       uid: user.id,
       name: user.name,
+      middle_name: user.middle_name,
       last_name: user.last_name,
-      role: user.role?.role,
+      second_last_name: user.second_last_name,
+      type_document: user.type_document,
+      document_number: user.document_number,
+      cellphone: user.cellphone,
       email: user.email,
+      role: user.role?.role,
       isVerified: user.isVerified,
     });
   } catch (error) {
