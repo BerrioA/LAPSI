@@ -52,7 +52,7 @@ export const validatedRegisterBooking = [
     .notEmpty()
     .withMessage("El área de estudio es clave para avanzar. ¡Solo falta eso!")
     .isString()
-    .matches(/^[a-zA-ZÁÉÍÓÚáéíóúÜüÑñ0-9\s]{3,}$/)
+    .matches(/^[\p{L}\p{N}\s().-]{3,}$/u)
     .withMessage(
       "Los símbolos están de vacaciones. Usa solo letras, números y espacios en el área de estudio."
     )
@@ -62,12 +62,7 @@ export const validatedRegisterBooking = [
     .trim()
     .notEmpty()
     .withMessage("El área de prueba es clave para avanzar. ¡Solo falta eso!")
-    .isString()
-    .matches(/^[\p{L}\p{M}\d\s:–(),.-]{10,}$/u)
-    .withMessage(
-      "Los símbolos están de vacaciones. Usa solo letras, números y espacios en el área de prueba."
-    )
-    .escape(),
+    .isString(),
 
   body("user_quantity")
     .trim()
@@ -82,8 +77,7 @@ export const validatedRegisterBooking = [
     .isArray()
     .withMessage(
       "¡Ups! Necesitamos al menos un integrante en el campo 'acompañantes'. Por favor, agrega uno."
-    )
-    .escape(),
+    ),
 
   body("partners.*.name")
     .trim()

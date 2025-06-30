@@ -33,7 +33,7 @@ export const Booking = sequelize.define("bookings", {
   },
   // Área de prueba relacionada con el área de prueba
   area_test: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING(600),
     allowNull: false,
   },
   // Cantidad de usuarios totales para la reserva

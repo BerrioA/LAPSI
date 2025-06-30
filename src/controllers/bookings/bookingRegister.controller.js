@@ -1,6 +1,7 @@
 import { sequelize } from "../../config/db.js";
 import { Booking } from "../../models/booking.js";
 import { AvailableQuotas } from "../../models/available_quotas.js";
+import moment from "moment";
 
 // Controlador encargado de registrar una reserva
 export const registerBooking = async (req, res) => {
@@ -19,6 +20,16 @@ export const registerBooking = async (req, res) => {
       bookingTimeBlockId,
     } = req.body;
 
+    const today = moment().startOf("day");
+    const bookingMoment = moment(bookingDate, "YYYY-MM-DD");
+
+    if (bookingMoment.isBefore(today)) {
+      await transaction.rollback();
+      return res
+        .status(400)
+        .json({ error: "No puedes reservar para una fecha pasada." });
+    }
+
     await Booking.create(
       {
         userId: req.uid,
@@ -36,7 +47,6 @@ export const registerBooking = async (req, res) => {
       },
       { transaction }
     );
-
 
     await AvailableQuotas.create(
       {

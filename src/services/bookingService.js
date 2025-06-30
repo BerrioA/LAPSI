@@ -2,6 +2,7 @@ import moment from "moment";
 import { Booking } from "../models/booking.js";
 import { BookingTimeBlocks } from "../models/booking_time_blocks.js";
 import { sequelize } from "../config/db.js";
+import { AvailableQuotas } from "../models/available_quotas.js";
 
 // Función para ejecutar como una tarea programada y actualizar las reservas pendientes
 export const updateReservationsFinished = async (res) => {
@@ -75,25 +76,35 @@ export const updateReservationsFinished = async (res) => {
 
         if (fechaHoraActual.isAfter(fechaHoraFin)) {
           await reservation.update({ status: "finalizada" }, { transaction });
+
           console.log(
             `Reserva ID ${id} actualizada a Finalizada (${bookingDate} ${start_time} + ${duration})`
           );
-          const blockTimeReservation = await BookingTimeBlocks.findByPk(
-            bookingTimeBlockId,
-            { transaction }
-          );
 
-          if (!blockTimeReservation) {
-            return { error: "No se ha encontrado la reserva con ID:", id };
-          }
-
-          await blockTimeReservation.update(
-            {
-              quotas_available:
-                blockTimeReservation.quotas_available + user_quantity,
+          // 🔄 Liberar cupos en AvailableQuotas
+          const existingQuota = await AvailableQuotas.findOne({
+            where: {
+              date: bookingDate,
+              start_time,
+              end_time,
+              bookingTimeBlockId,
             },
-            { transaction }
-          );
+            transaction,
+          });
+
+          if (existingQuota) {
+            const nuevaCantidad = existingQuota.occupied_quotas - user_quantity;
+            await existingQuota.update(
+              {
+                occupied_quotas: nuevaCantidad >= 0 ? nuevaCantidad : 0,
+              },
+              { transaction }
+            );
+          } else {
+            console.warn(
+              `⚠️ No se encontró cuota para liberar en bloque ${bookingTimeBlockId} con fecha ${bookingDate}`
+            );
+          }
 
           reservationsUpdated.push(id);
         }
