@@ -22,7 +22,7 @@ router.get("/", getStudentUsers);
 router.post("/", validateUserRegister, registerUsers);
 router.patch("/", requireToken, validateUserUpdate, updateUser);
 router.delete("/:userId", validateUserId, deleteUser);
-router.patch("/change-password", changePassword);
+router.patch("/change-password", requireToken, changePassword);
 router.post("/recover-password", sendPasswordRecoveryUrl);
 router.post("/reset-password", resetPassword);
 router.patch("/verify-account/:code", verifyAccount);
