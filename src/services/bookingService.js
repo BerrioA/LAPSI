@@ -3,6 +3,7 @@ import { Booking } from "../models/booking.js";
 import { BookingTimeBlocks } from "../models/booking_time_blocks.js";
 import { sequelize } from "../config/db.js";
 import { AvailableQuotas } from "../models/available_quotas.js";
+import { Op } from "sequelize";
 
 // Función para ejecutar como una tarea programada y actualizar las reservas pendientes
 export const updateReservationsFinished = async (res) => {
@@ -11,7 +12,11 @@ export const updateReservationsFinished = async (res) => {
   const transaction = await sequelize.transaction();
   try {
     const reservations = await Booking.findAll({
-      where: { status: "confirmada" },
+      where: {
+        status: {
+          [Op.in]: ["confirmada", "aprobada"],
+        },
+      },
       raw: false,
       include: {
         model: BookingTimeBlocks,
@@ -19,7 +24,6 @@ export const updateReservationsFinished = async (res) => {
       },
       transaction,
     });
-
     for (const reservation of reservations) {
       try {
         const { id, bookingTimeBlockId, user_quantity, bookingDate, duration } =

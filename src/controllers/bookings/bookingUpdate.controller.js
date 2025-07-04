@@ -1,4 +1,6 @@
+import { sequelize } from "../../config/db.js";
 import { Booking } from "../../models/booking.js";
+import { BookingTimeBlocks } from "../../models/booking_time_blocks.js";
 
 // Controlador encargado de actualizar una reserva
 export const updateBooking = async (req, res) => {
@@ -73,3 +75,66 @@ export const updateBooking = async (req, res) => {
       .json({ error: "Error al intentar actualizar la reserva." });
   }
 };
+
+// Controlador encargado de actualizar una reserva en su estado a cancelada
+export const updateBookingState = async (req, res) => {
+  const transaction = await sequelize.transaction();
+
+  try {
+    const { bookingId } = req.params;
+    const { status } = req.body;
+
+    // Validar que el estado enviado sea permitido
+    if (!["cancelada", "aprobada"].includes(status)) {
+      return res.status(400).json({
+        error: "Estado no válido. Solo se permite 'cancelada' o 'aprobada'.",
+      });
+    }
+
+    const booking = await Booking.findByPk(bookingId, { transaction });
+
+    if (!booking) {
+      return res.status(404).json({
+        error: "No se ha encontrado la reserva que desea actualizar.",
+      });
+    }
+
+    // Solo hacer algo si el estado cambia
+    if (booking.status !== status) {
+      // Si la reserva se cancela, se liberan los cupos
+      if (status === "cancelada" && booking.status !== "cancelada") {
+        const timeBlock = await BookingTimeBlocks.findByPk(booking.bookingTimeBlockId, {
+          transaction,
+        });
+
+        if (timeBlock) {
+          await timeBlock.update(
+            {
+              quotas_available:
+                timeBlock.quotas_available + booking.user_quantity,
+            },
+            { transaction }
+          );
+        }
+      }
+
+      // Actualizar estado de la reserva
+      booking.status = status;
+      await booking.save({ transaction });
+    }
+
+    await transaction.commit();
+
+    return res
+      .status(200)
+      .json({ message: "Estado de la reserva actualizado correctamente." });
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error al actualizar el estado de la reserva:", error);
+
+    return res.status(500).json({
+      error: "Error al intentar actualizar el estado de la reserva.",
+    });
+  }
+};
+

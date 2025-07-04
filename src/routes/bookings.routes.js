@@ -15,8 +15,10 @@ import {
 import {
   requireToken,
   verifyAdminMod,
+  verifyAllUsers,
   verifyStudent,
 } from "../middlewares/auth/index.js";
+import { updateBookingState } from "../controllers/bookings/bookingUpdate.controller.js";
 
 const router = Router();
 
@@ -204,99 +206,106 @@ router.post(
   validatedRegisterBooking,
   registerBooking
 );
-/**
- * @swagger
- * /bookings/{bookingId}:
- *   patch:
- *     summary: Actualizar una reserva
- *     description: Permite al usuario autenticado actualizar una de sus propias reservas. La reserva no puede exceder el límite de 2 horas semanales.
- *     tags: [Reservas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: bookingId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: ID de la reserva a actualizar
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               activity_type:
- *                 type: string
- *                 example: Evaluación diagnóstica
- *               other_activity:
- *                 type: string
- *                 example: ""
- *               study_area:
- *                 type: string
- *                 example: Cognitiva
- *               area_test:
- *                 type: string
- *                 example: Prueba de habilidades verbales
- *               user_quantity:
- *                 type: integer
- *                 example: 2
- *               partners:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     name:
- *                       type: string
- *                       example: Ana
- *                     last_name:
- *                       type: string
- *                       example: Torres
- *               teachers_name:
- *                 type: string
- *                 example: Laura Gómez
- *               bookingDate:
- *                 type: string
- *                 format: date
- *                 example: 2025-07-15
- *               bookingTimeBlockId:
- *                 type: string
- *                 format: uuid
- *                 example: 0516e692-9f16-4cc8-97d9-4986927d15a7
- *     responses:
- *       200:
- *         description: Reserva actualizada exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Reserva actualizada correctamente.
- *                 data:
- *                   $ref: '#/components/schemas/Booking'
- *       400:
- *         description: Datos inválidos o error de validación
- *       401:
- *         description: No autorizado (token no enviado o inválido)
- *       403:
- *         description: No tienes permiso para modificar esta reserva
- *       404:
- *         description: Reserva no encontrada
- *       500:
- *         description: Error interno del servidor
- */
+// /**
+//  * @swagger
+//  * /bookings/{bookingId}:
+//  *   patch:
+//  *     summary: Actualizar una reserva
+//  *     description: Permite al usuario autenticado actualizar una de sus propias reservas. La reserva no puede exceder el límite de 2 horas semanales.
+//  *     tags: [Reservas]
+//  *     security:
+//  *       - bearerAuth: []
+//  *     parameters:
+//  *       - in: path
+//  *         name: bookingId
+//  *         required: true
+//  *         schema:
+//  *           type: string
+//  *           format: uuid
+//  *         description: ID de la reserva a actualizar
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             type: object
+//  *             properties:
+//  *               activity_type:
+//  *                 type: string
+//  *                 example: Evaluación diagnóstica
+//  *               other_activity:
+//  *                 type: string
+//  *                 example: ""
+//  *               study_area:
+//  *                 type: string
+//  *                 example: Cognitiva
+//  *               area_test:
+//  *                 type: string
+//  *                 example: Prueba de habilidades verbales
+//  *               user_quantity:
+//  *                 type: integer
+//  *                 example: 2
+//  *               partners:
+//  *                 type: array
+//  *                 items:
+//  *                   type: object
+//  *                   properties:
+//  *                     name:
+//  *                       type: string
+//  *                       example: Ana
+//  *                     last_name:
+//  *                       type: string
+//  *                       example: Torres
+//  *               teachers_name:
+//  *                 type: string
+//  *                 example: Laura Gómez
+//  *               bookingDate:
+//  *                 type: string
+//  *                 format: date
+//  *                 example: 2025-07-15
+//  *               bookingTimeBlockId:
+//  *                 type: string
+//  *                 format: uuid
+//  *                 example: 0516e692-9f16-4cc8-97d9-4986927d15a7
+//  *     responses:
+//  *       200:
+//  *         description: Reserva actualizada exitosamente
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: object
+//  *               properties:
+//  *                 message:
+//  *                   type: string
+//  *                   example: Reserva actualizada correctamente.
+//  *                 data:
+//  *                   $ref: '#/components/schemas/Booking'
+//  *       400:
+//  *         description: Datos inválidos o error de validación
+//  *       401:
+//  *         description: No autorizado (token no enviado o inválido)
+//  *       403:
+//  *         description: No tienes permiso para modificar esta reserva
+//  *       404:
+//  *         description: Reserva no encontrada
+//  *       500:
+//  *         description: Error interno del servidor
+//  */
+// router.patch(
+//   "/:bookingId",
+//   requireToken,
+//   verifyStudent,
+//   validationIdBooking,
+//   verifyUserWeeklyLimit,
+//   validatedUpdateBooking,
+//   updateBooking
+// );
 router.patch(
   "/:bookingId",
   requireToken,
-  verifyStudent,
+  verifyAllUsers,
   validationIdBooking,
-  verifyUserWeeklyLimit,
-  validatedUpdateBooking,
-  updateBooking
+  updateBookingState
 );
 /**
  * @swagger
