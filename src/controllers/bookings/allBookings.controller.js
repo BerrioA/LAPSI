@@ -7,7 +7,7 @@ export const getBookings = async (req, res) => {
   try {
     const bookings = await Booking.findAll({
       attributes: {
-        exclude: ["createdAt", "updatedAt", "bookingTimeBlockId", "roomId"],
+        exclude: [ "updatedAt", "bookingTimeBlockId", "roomId"],
       },
       include: [
         {
@@ -40,7 +40,7 @@ export const getBookingsByUser = async (req, res) => {
     const bookings = await Booking.findAll({
       where: { userId: req.uid },
       attributes: {
-        exclude: ["createdAt", "updatedAt", "bookingTimeBlockId", "roomId"],
+        exclude: [ "updatedAt", "bookingTimeBlockId", "roomId"],
       },
       include: [
         {
@@ -57,7 +57,6 @@ export const getBookingsByUser = async (req, res) => {
         },
       ],
     });
-
 
     return res.status(200).json(bookings);
   } catch (error) {
